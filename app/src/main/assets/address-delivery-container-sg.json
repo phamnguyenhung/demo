@@ -1,0 +1,59 @@
+{
+    "containers": [
+        {
+            "id": 0,
+            "name": "",
+            "has_note": true,
+            "groups": [
+                {
+                    "items": [
+                        {
+                            "id": 1,
+                            "name": "Level No.",
+                            "param": "level_no",
+                            "is_required": true
+                        },
+                        {
+                            "id": 3,
+                            "name": "Unit No.",
+                            "param": "unit_no",
+                            "is_required": true
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "id": 6,
+                            "name": "Postal Code",
+                            "param": "zip_code",
+                            "read_only": true,
+                            "is_required": false
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "id": 4,
+                            "name": "Landmark/Building name",
+                            "param": "landmark",
+                            "is_required": false
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "id": 199,
+                            "name": "Phone Number",
+                            "param": "phone_number",
+                            "is_required": true,
+                            "title": "Phone Number"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

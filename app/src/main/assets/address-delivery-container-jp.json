@@ -1,0 +1,45 @@
+{
+    "containers": [
+        {
+            "id": 0,
+            "name": "",
+            "has_note": true,
+            "is_note_title" : true,
+            "groups": [
+                {
+                    "items": [
+                        {
+                            "id": 0,
+                            "name": "Street number",
+                            "warning_message" : "This field is required",
+                            "param": "house_no",
+                            "is_required": true
+                            
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "id": 4,
+                            "name": "Landmark/Building name",
+                            "param": "landmark",
+                            "is_required": false
+                        }
+                    ]
+                },
+                {
+                    "items": [
+                        {
+                            "id": 3,
+                            "name": "Room Number",
+                            "param": "unit_no",
+                            "is_required": false
+                        }
+                    ]
+                }
+                
+            ]
+        }
+    ]
+}
