@@ -1,10 +1,13 @@
 package com.example.myapplication.viewholder
 
+import android.graphics.Color
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import com.example.myapplication.R
 import com.example.myapplication.model.PhoneComponent
 import com.example.myapplication.model.PlainEdtComponent
 import com.example.myapplication.model.SessionNameComponent
+import kotlinx.android.synthetic.main.item_view_phone_number_edt.*
 import kotlinx.android.synthetic.main.item_view_phone_number_edt.view.*
 
 
@@ -12,6 +15,12 @@ open class PhoneNumberHolder(
     parent: ViewGroup,
     layoutId: Int = R.layout.item_view_phone_number_edt
 ) : FormViewHolder<PhoneComponent>(parent, layoutId) {
+    init {
+        edtPhone.addTextChangedListener(onTextChanged = { text, start, count, after ->
+            item?.name = text.toString()
+            item?.notifyChange()
+        })
+    }
 
     override fun onBind(component: PhoneComponent) {
         super.onBind(component)
@@ -19,6 +28,11 @@ open class PhoneNumberHolder(
             tvTitle.text = component.title
             edtPhone.hint = component.name
         }
+    }
+
+    override fun onValidate(success: Boolean, error: String?) {
+        if (success) tvTitle.setTextColor(Color.RED)
+        else tvTitle.setTextColor(Color.BLACK)
     }
 }
 

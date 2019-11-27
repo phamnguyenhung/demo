@@ -1,5 +1,10 @@
 package com.example.myapplication.model
 
+import com.example.myapplication.observable.SelfObservable
+import com.example.myapplication.observable.Validator
+import com.example.myapplication.observable.ValidatorOwner
+import com.example.myapplication.validator.PhoneValidator
+
 val SESSION_NAME_IDS = listOf(200, 201)
 val PHONE_NUMBER_EDT_IDS = listOf(199)
 val PLAIN_EDT_IDS = listOf(0, 1, 2, 3, 4, 5, 6, 7)
@@ -37,20 +42,28 @@ interface ViewComponent {
     val isRequired: Boolean get() = false
 }
 
-abstract class SubmittedComponent(var param: String = "") : ViewComponent {
+abstract class SubmittableComponent<T>(var param: String = "") : SelfObservable<T>(),
+    ViewComponent {
     override var id: Int = super.id
     override var type: ComponentType = super.type
     override var isRequired: Boolean = super.isRequired
 }
 
 class PhoneComponent(
-    val name: String = "",
-    val title: String = ""
-) : SubmittedComponent()
+    var name: String,
+    val title: String = "",
+    override var validator: Validator<String> = PhoneValidator()
+) : SubmittableComponent<PhoneComponent>(), ValidatorOwner {
+    override val isValid: Boolean
+        get() = validator.accept(name)
+}
 
-class NoteComponent : SubmittedComponent()
+class NoteComponent(val name: String = "") : SubmittableComponent<NoteComponent>() {
+}
 
-class PlainEdtComponent(val name: String = "") : SubmittedComponent()
+class PlainEdtComponent(val name: String = "") :
+    SubmittableComponent<PlainEdtComponent>() {
+}
 
 class SessionNameComponent : ViewComponent
 

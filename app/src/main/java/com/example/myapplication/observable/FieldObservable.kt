@@ -2,17 +2,68 @@ package com.example.myapplication.observable
 
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import android.widget.EditText
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
-import java.util.*
 
-class FieldObservable<T>(default: T) {
+interface IObservable<T> {
+    fun notifyChange()
+    fun subscribe(observer: Observer<T>)
+    fun unsubscribe(observer: Observer<T>)
+}
+
+interface ObservableOwner {
+    val observable: IObservable<Any>
+}
+
+abstract class Observable<T> : IObservable<T> {
+    @Transient
+    private val mObservers = hashSetOf<Observer<T>>()
+
+    override fun subscribe(observer: Observer<T>) {
+        mObservers.add(observer)
+        notifyChange(observer)
+    }
+
+    override fun unsubscribe(observer: Observer<T>) {
+        mObservers.remove(observer)
+    }
+
+    override fun notifyChange() {
+        mObservers.forEach { notifyChange(it) }
+    }
+
+    protected abstract fun notifyChange(observer: Observer<T>)
+
+    @Suppress("unchecked_cast")
+    fun asAnyObservable(): Observable<Any> {
+        return this as Observable<Any>
+    }
+
+}
+
+abstract class SelfObservable<T> : Observable<T>(), ObservableOwner {
+    override val observable: IObservable<Any>
+        get() = asAnyObservable()
+
+    override fun notifyChange(observer: Observer<T>) {
+        @Suppress("UNCHECKED_CAST")
+        observer.onChanged(this as? T)
+    }
+}
+
+class ObservableDelegate<T> : Observable<T>() {
+    override fun notifyChange(observer: Observer<T>) {
+        observer.onChanged(default ?: error("Not setted yet!"))
+    }
+
+    var default: T? = null
+}
+
+class FieldObservable<T>(default: T) : Observable<T>() {
     var validator: Validator<T>? = null
 
-    private val mObservers = arrayListOf<Observer<T>>()
     var value: T = default
         set(value) {
             if (value == field) return
@@ -20,18 +71,8 @@ class FieldObservable<T>(default: T) {
             notifyChange()
         }
 
-    fun notifyChange() {
-        mObservers.forEach { it.onChanged(value) }
-    }
-
-    fun subscribe(observer: Observer<T>) {
-        if (mObservers.contains(observer)) return
-        mObservers.add(observer)
+    override fun notifyChange(observer: Observer<T>) {
         observer.onChanged(value)
-    }
-
-    fun unsubscribe(observer: Observer<T>) {
-        mObservers.remove(observer)
     }
 
     operator fun plus(field: FieldObservable<out Any>): FieldObservable<Any> {
@@ -43,11 +84,6 @@ class FieldObservable<T>(default: T) {
             next.value = it
         })
         return next
-    }
-
-    @Suppress("unchecked_cast")
-    fun asAnyObservable(): FieldObservable<Any> {
-        return this as FieldObservable<Any>
     }
 
     fun isValid(): Boolean {
@@ -66,10 +102,6 @@ fun allOf(values: List<FieldObservable<*>>): LiveData<Any> {
     return next
 }
 
-interface Validator<T> {
-    val error: String
-    fun accept(item: T): Boolean
-}
 
 private class FieldBinding<T>(
     val observer: Observer<T>,

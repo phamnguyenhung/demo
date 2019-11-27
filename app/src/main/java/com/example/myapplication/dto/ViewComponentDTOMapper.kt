@@ -26,11 +26,13 @@ class ViewComponentDTOMapper {
 
     private fun MutableList<ViewComponent>.onTraversal(item: Item) =
         when (ComponentType.getTypeById(item.id)) {
-            ComponentType.SESSION_NAME -> { }
+            ComponentType.SESSION_NAME -> {
+            }
             ComponentType.PHONE_NUMBER_EDT -> this += toPhoneComponent(item)
             ComponentType.PLAIN_EDT -> this += toPlain(item)
             ComponentType.NOTE_EDT -> this += NoteComponent()
-            else -> { }
+            else -> {
+            }
         }
 
     private fun toPlain(item: Item) = PlainEdtComponent(
