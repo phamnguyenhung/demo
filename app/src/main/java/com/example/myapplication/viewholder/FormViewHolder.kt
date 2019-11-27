@@ -7,9 +7,17 @@ import androidx.annotation.CallSuper
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.observable.FieldObservable
+import com.example.myapplication.observable.IObservable
+import com.example.myapplication.observable.ValidatorOwner
+import kotlinx.android.extensions.LayoutContainer
 
-abstract class FormViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView), Observer<T> {
-    private var mItem: T? = null
+
+abstract class FormViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView), Observer<T>,
+    LayoutContainer {
+    override val containerView: View?
+        get() = itemView
+    protected var item: T? = null
+        private set
 
     constructor(parent: ViewGroup, layoutId: Int) : this(
         LayoutInflater.from(parent.context).inflate(
@@ -20,16 +28,25 @@ abstract class FormViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemV
     @Suppress("unchecked_cast")
     @CallSuper
     open fun onBind(component: T) {
-        mItem = component
-        (component as? FieldObservable<T>)?.subscribe(this)
+        item = component
+        (component as? IObservable<T>)?.subscribe(this)
     }
 
-    override fun onChanged(t: T) {}
+    @CallSuper
+    override fun onChanged(item: T) {
+        if (item is ValidatorOwner) {
+            val isSuccess = item.isValid
+            onValidate(isSuccess, item.validator.error)
+        }
+    }
+
+    protected open fun onValidate(success: Boolean, error: String?) {
+    }
 
     @Suppress("unchecked_cast")
     open fun onRecycled() {
-        (mItem as? FieldObservable<T>)?.unsubscribe(this)
-        mItem = null
+        (item as? IObservable<T>)?.unsubscribe(this)
+        item = null
     }
 }
 

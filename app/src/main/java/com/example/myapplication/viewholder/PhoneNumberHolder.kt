@@ -1,18 +1,26 @@
 package com.example.myapplication.viewholder
 
+import android.graphics.Color
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import com.example.myapplication.R
 import com.example.myapplication.model.PhoneComponent
 import com.example.myapplication.model.PlainEdtComponent
 import com.example.myapplication.model.SessionNameComponent
-import kotlinx.android.synthetic.main.item_view_phone_number_edt.view.*
-import kotlinx.android.synthetic.main.item_view_plain_edt.view.*
+import kotlinx.android.synthetic.main.item_view_phone_number_edt.*
+import kotlinx.android.synthetic.main.item_view_plain_edt.*
 
 
 open class PhoneNumberHolder(
     parent: ViewGroup,
     layoutId: Int = R.layout.item_view_phone_number_edt
 ) : FormViewHolder<PhoneComponent>(parent, layoutId) {
+    init {
+        edtPhone.addTextChangedListener(onTextChanged = { text, start, count, after ->
+            item?.name = text.toString()
+            item?.notifyChange()
+        })
+    }
 
     override fun onChanged(t: PhoneComponent) {
         super.onChanged(t)
@@ -26,6 +34,16 @@ open class PhoneNumberHolder(
             edtPhone.hint = component.name
         }
     }
+
+    override fun onValidate(success: Boolean, error: String?) {
+        itemView.apply {
+            if (success) {
+                tvPhoneTitle.setTextColor(Color.BLACK)
+            } else {
+                tvPhoneTitle.setTextColor(Color.RED)
+            }
+        }
+    }
 }
 
 class NoteHolder(parent: ViewGroup) :
@@ -34,11 +52,11 @@ class NoteHolder(parent: ViewGroup) :
 class PlainEdtHolder(parent: ViewGroup) :
     FormViewHolder<PlainEdtComponent>(parent, R.layout.item_view_plain_edt) {
 
-    override fun onChanged(t: PlainEdtComponent) {
-        super.onChanged(t)
-        itemView.apply {
-            tvErrorMsg.text = "error"
-        }
+    init {
+        edtContent.addTextChangedListener(onTextChanged = { text, start, count, after ->
+            item?.name = text.toString()
+            item?.notifyChange()
+        })
     }
 
     override fun onBind(component: PlainEdtComponent) {
@@ -46,6 +64,12 @@ class PlainEdtHolder(parent: ViewGroup) :
         itemView.apply {
             tvTitle.text = component.name
             edtContent.hint = component.name
+        }
+    }
+
+    override fun onValidate(success: Boolean, error: String?) {
+        itemView.apply {
+            tvErrorMsg.text = if (success) null else error
         }
     }
 }

@@ -21,6 +21,6 @@
         android:id="@+id/tvErrorMsg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#FF0000"
-        tools:text="abc" />
+        android:text="abc"
+        android:textColor="#FF0000" />
 </LinearLayout>
