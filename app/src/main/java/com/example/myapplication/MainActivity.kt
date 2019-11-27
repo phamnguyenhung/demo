@@ -1,10 +1,9 @@
 package com.example.myapplication
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.model.PhoneComponent
 import com.example.myapplication.model.PlainEdtComponent
 import com.example.myapplication.model.SessionNameComponent
@@ -22,32 +21,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        viewModel = MainViewModel(applicationContext)
 
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java).apply {
-            init()
-        }
+        formAdapter = FormAdapter(rvForm)
 
-        formAdapter = FormAdapter(/*createData()*/)
-        rvForm.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        rvForm.adapter = formAdapter
-    }
-
-    private fun MainViewModel.init() {
-        call(loadJsonFromAsset())
-        viewComponents.observe(this@MainActivity, Observer {
+        viewModel.viewComponents.observe(this, Observer {
             formAdapter.setData(it)
         })
     }
-
-    private fun loadJsonFromAsset() =
-        applicationContext
-            .assets
-            .open("address-delivery-container-sg.json")
-            .bufferedReader()
-            .use {
-                it.readText()
-            }
-
 
     private fun createData(): List<ViewComponent> {
         return listOf(

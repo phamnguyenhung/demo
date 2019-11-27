@@ -1,6 +1,6 @@
 package com.example.myapplication.viewmodel
 
-import androidx.lifecycle.LiveData
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.myapplication.dto.ViewComponentDTO
@@ -12,14 +12,19 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class MainViewModel : ViewModel() {
+class MainViewModel(context: Context) : ViewModel() {
 
     private val mapper = ViewComponentDTOMapper()
     private val gson = Gson()
 
-    private val _viewComponents = MutableLiveData<List<ViewComponent>>()
-    val viewComponents: LiveData<List<ViewComponent>>
-        get() = _viewComponents
+    val viewComponents = MutableLiveData<List<ViewComponent>>()
+
+    init {
+        call(context.assets
+            .open("address-delivery-container-sg.json")
+            .bufferedReader()
+            .use { it.readText() })
+    }
 
     fun call(json: String) {
         val a = Single.fromCallable {
@@ -27,7 +32,7 @@ class MainViewModel : ViewModel() {
         }.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                _viewComponents.postValue(mapper(it) + CheckoutButtonComponent())
+                viewComponents.postValue(mapper(it) + CheckoutButtonComponent())
             }, {
 
             })
