@@ -1,13 +1,9 @@
 package com.example.myapplication.model
 
-import com.example.myapplication.model.ViewComponent.Companion.CHECKOUT_BUTTON_TYPE
-import com.example.myapplication.model.ViewComponent.Companion.SESSION_NAME_TYPE
-
 val SESSION_NAME_IDS = listOf(200, 201)
 val PHONE_NUMBER_EDT_IDS = listOf(199)
 val PLAIN_EDT_IDS = listOf(0, 1, 2, 3, 4, 5, 6, 7)
 val NOTE_EDT_IDS = listOf(99)
-
 
 enum class ComponentType(val ids: List<Int> = emptyList()) {
     UN_KNOW,
@@ -29,57 +25,33 @@ enum class ComponentType(val ids: List<Int> = emptyList()) {
 
 interface ViewComponent {
     companion object {
-        val PHONE_TYPE = 0
-        val NOTE_TYPE = 1
-        val PLAIN_TYPE = 2
-        val SESSION_NAME_TYPE = 3
-        val CHECKOUT_BUTTON_TYPE = 4
+        const val PHONE_TYPE = 0
+        const val NOTE_TYPE = 1
+        const val PLAIN_TYPE = 2
+        const val SESSION_NAME_TYPE = 3
+        const val CHECKOUT_BUTTON_TYPE = 4
     }
 
-    val viewType: Int
+    val id: Int get() = 0
+    val type: ComponentType get() = ComponentType.UN_KNOW
+    val isRequired: Boolean get() = false
 }
 
-abstract class BaseComponent(
-    var id: Int = 0,
-    var type: ComponentType = ComponentType.UN_KNOW,
-    var isRequired: Boolean = false
-) : ViewComponent
-
-abstract class SubmittedComponent(
-    var param: String = ""
-) : BaseComponent()
+abstract class SubmittedComponent(var param: String = "") : ViewComponent {
+    override var id: Int = super.id
+    override var type: ComponentType = super.type
+    override var isRequired: Boolean = super.isRequired
+}
 
 class PhoneComponent(
     val name: String = "",
     val title: String = ""
-) : SubmittedComponent() {
+) : SubmittedComponent()
 
-    override val viewType: Int
-        get() = ViewComponent.PHONE_TYPE
-}
+class NoteComponent : SubmittedComponent()
 
-class NoteComponent : SubmittedComponent() {
+class PlainEdtComponent(val name: String = "") : SubmittedComponent()
 
-    override val viewType: Int
-        get() = ViewComponent.NOTE_TYPE
-}
+class SessionNameComponent : ViewComponent
 
-class PlainEdtComponent(
-    val name: String = ""
-) : SubmittedComponent() {
-
-    override val viewType: Int
-        get() = ViewComponent.PLAIN_TYPE
-}
-
-class SessionNameComponent : BaseComponent() {
-
-    override val viewType: Int
-        get() = SESSION_NAME_TYPE
-}
-
-class CheckoutButtonComponent : ViewComponent {
-
-    override val viewType: Int
-        get() = CHECKOUT_BUTTON_TYPE
-}
+class CheckoutButtonComponent : ViewComponent

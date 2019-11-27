@@ -4,12 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapplication.model.ViewComponent
-import com.example.myapplication.model.ViewComponent.Companion.CHECKOUT_BUTTON_TYPE
-import com.example.myapplication.model.ViewComponent.Companion.NOTE_TYPE
-import com.example.myapplication.model.ViewComponent.Companion.PHONE_TYPE
-import com.example.myapplication.model.ViewComponent.Companion.PLAIN_TYPE
-import com.example.myapplication.model.ViewComponent.Companion.SESSION_NAME_TYPE
+import com.example.myapplication.model.*
 
 class DetachAdapter : View.OnAttachStateChangeListener {
     override fun onViewAttachedToWindow(v: View?) {}
@@ -19,7 +14,8 @@ class DetachAdapter : View.OnAttachStateChangeListener {
     }
 }
 
-class FormAdapter(view: RecyclerView) : RecyclerView.Adapter<FormViewHolder>() {
+class FormAdapter(view: RecyclerView) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
     private var mItems: List<ViewComponent> = emptyList()
 
     init {
@@ -33,27 +29,35 @@ class FormAdapter(view: RecyclerView) : RecyclerView.Adapter<FormViewHolder>() {
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FormViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            PHONE_TYPE -> PhoneNumberHolder(parent)
-            NOTE_TYPE -> NotePhoneNumberHolder(parent)
-            PLAIN_TYPE -> PlainPhoneNumberHolder(parent)
-            SESSION_NAME_TYPE -> SessionPhoneNumberHolder(parent)
-            CHECKOUT_BUTTON_TYPE -> CheckoutButtonViewHolder(parent)
+            ViewComponent.PHONE_TYPE -> PhoneNumberHolder(parent)
+            ViewComponent.NOTE_TYPE -> NoteHolder(parent)
+            ViewComponent.PLAIN_TYPE -> PlainHolder(parent)
+            ViewComponent.SESSION_NAME_TYPE -> SessionNameHolder(parent)
+            ViewComponent.CHECKOUT_BUTTON_TYPE -> CheckoutButtonViewHolder(parent)
             else -> throw Exception("Not support yet!")
         }
     }
 
     override fun getItemCount() = mItems.size
 
-    override fun onBindViewHolder(holder: FormViewHolder, position: Int) {
-        holder.onBind(mItems[position])
+    @Suppress("unchecked_cast")
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        (holder as? FormViewHolder<ViewComponent>)?.onBind(mItems[position])
     }
 
-    override fun onViewRecycled(holder: FormViewHolder) {
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         super.onViewRecycled(holder)
-        holder.onRecycled()
+        (holder as? FormViewHolder<*>)?.onRecycled()
     }
 
-    override fun getItemViewType(position: Int) = mItems[position].viewType
+    override fun getItemViewType(position: Int) = when (mItems[position]) {
+        is PhoneComponent -> ViewComponent.PHONE_TYPE
+        is NoteComponent -> ViewComponent.NOTE_TYPE
+        is PlainEdtComponent -> ViewComponent.PLAIN_TYPE
+        is SessionNameComponent -> ViewComponent.SESSION_NAME_TYPE
+        is CheckoutButtonComponent -> ViewComponent.CHECKOUT_BUTTON_TYPE
+        else -> error("not support")
+    }
 }

@@ -1,13 +1,8 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import com.example.myapplication.model.PhoneComponent
-import com.example.myapplication.model.PlainEdtComponent
-import com.example.myapplication.model.SessionNameComponent
-import com.example.myapplication.model.ViewComponent
 import com.example.myapplication.viewholder.FormAdapter
 import com.example.myapplication.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -28,13 +23,5 @@ class MainActivity : AppCompatActivity() {
         viewModel.viewComponents.observe(this, Observer {
             formAdapter.setData(it)
         })
-    }
-
-    private fun createData(): List<ViewComponent> {
-        return listOf(
-            SessionNameComponent(),
-            PhoneComponent("name", "title"),
-            PlainEdtComponent("plain name")
-        )
     }
 }

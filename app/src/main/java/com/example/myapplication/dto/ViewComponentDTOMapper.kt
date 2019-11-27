@@ -8,48 +8,50 @@ class ViewComponentDTOMapper {
         val result = mutableListOf<ViewComponent>()
         viewComponentDto.containers?.firstOrNull()?.let {
             it.groups?.forEach { group ->
-                group.items.forEach { item ->
-                    when (ComponentType.getTypeById(item.id)) {
-                        ComponentType.SESSION_NAME -> {
-
-                        }
-                        ComponentType.PHONE_NUMBER_EDT -> {
-                            result += PhoneComponent(
-                                name = item.name,
-                                title = item.title
-                            ).apply {
-                                isRequired = item.isRequired
-                                param = item.param
-                                id = item.id
-                                type = ComponentType.PHONE_NUMBER_EDT
-                            }
-                        }
-                        ComponentType.PLAIN_EDT -> {
-                            result += PlainEdtComponent(
-                                name = item.name
-                            ).apply {
-                                isRequired = item.isRequired
-                                param = item.param
-                                id = item.id
-                                type = ComponentType.PHONE_NUMBER_EDT
-                            }
-                        }
-                        ComponentType.NOTE_EDT -> {
-                            result += NoteComponent(
-
-                            )
-                        }
-                        else -> {
-
-                        }
-                    }
-                }
+                result.onTraversal(group)
             }
 
-            if(it.hasNote) {
+            if (it.hasNote) {
                 result += NoteComponent()
             }
         }
         return result
     }
+
+    private fun MutableList<ViewComponent>.onTraversal(group: Group) {
+        group.items.forEach { item ->
+            onTraversal(item)
+        }
+    }
+
+    private fun MutableList<ViewComponent>.onTraversal(item: Item) =
+        when (ComponentType.getTypeById(item.id)) {
+            ComponentType.SESSION_NAME -> {
+
+            }
+            ComponentType.PHONE_NUMBER_EDT -> this += PhoneComponent(
+                name = item.name,
+                title = item.title
+            ).apply {
+                isRequired = item.isRequired
+                param = item.param
+                id = item.id
+                type = ComponentType.PHONE_NUMBER_EDT
+            }
+
+            ComponentType.PLAIN_EDT -> this += PlainEdtComponent(
+                name = item.name
+            ).apply {
+                isRequired = item.isRequired
+                param = item.param
+                id = item.id
+                type = ComponentType.PHONE_NUMBER_EDT
+            }
+            ComponentType.NOTE_EDT -> this += NoteComponent(
+
+            )
+            else -> {
+
+            }
+        }
 }
