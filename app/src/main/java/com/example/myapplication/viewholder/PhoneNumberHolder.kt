@@ -6,6 +6,7 @@ import com.example.myapplication.model.PhoneComponent
 import com.example.myapplication.model.PlainEdtComponent
 import com.example.myapplication.model.SessionNameComponent
 import kotlinx.android.synthetic.main.item_view_phone_number_edt.view.*
+import kotlinx.android.synthetic.main.item_view_plain_edt.view.*
 
 
 open class PhoneNumberHolder(
@@ -13,10 +14,15 @@ open class PhoneNumberHolder(
     layoutId: Int = R.layout.item_view_phone_number_edt
 ) : FormViewHolder<PhoneComponent>(parent, layoutId) {
 
+    override fun onChanged(t: PhoneComponent) {
+        super.onChanged(t)
+
+    }
+
     override fun onBind(component: PhoneComponent) {
         super.onBind(component)
         itemView.apply {
-            tvTitle.text = component.title
+            tvPhoneTitle.text = component.title
             edtPhone.hint = component.name
         }
     }
@@ -25,8 +31,24 @@ open class PhoneNumberHolder(
 class NoteHolder(parent: ViewGroup) :
     FormViewHolder<PhoneComponent>(parent, R.layout.item_view_phone_number_edt)
 
-class PlainHolder(parent: ViewGroup) :
-    FormViewHolder<PlainEdtComponent>(parent, R.layout.item_view_plain_edt)
+class PlainEdtHolder(parent: ViewGroup) :
+    FormViewHolder<PlainEdtComponent>(parent, R.layout.item_view_plain_edt) {
+
+    override fun onChanged(t: PlainEdtComponent) {
+        super.onChanged(t)
+        itemView.apply {
+            tvErrorMsg.text = "error"
+        }
+    }
+
+    override fun onBind(component: PlainEdtComponent) {
+        super.onBind(component)
+        itemView.apply {
+            tvTitle.text = component.name
+            edtContent.hint = component.name
+        }
+    }
+}
 
 class SessionNameHolder(parent: ViewGroup) :
     FormViewHolder<SessionNameComponent>(parent, R.layout.item_view_session_name)

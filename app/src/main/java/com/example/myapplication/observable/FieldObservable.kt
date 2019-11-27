@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import java.util.*
 
 class FieldObservable<T>(default: T) {
+
     var validator: Validator<T>? = null
 
     private val mObservers = arrayListOf<Observer<T>>()
@@ -53,7 +54,6 @@ class FieldObservable<T>(default: T) {
     fun isValid(): Boolean {
         return validator?.accept(this.value) ?: true
     }
-
 }
 
 fun allOf(values: List<FieldObservable<*>>): LiveData<Any> {

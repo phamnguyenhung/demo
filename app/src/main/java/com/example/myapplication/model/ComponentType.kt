@@ -50,7 +50,24 @@ class PhoneComponent(
 
 class NoteComponent : SubmittedComponent()
 
-class PlainEdtComponent(val name: String = "") : SubmittedComponent()
+interface IPlain {
+    val title: String
+    val errorMsg: String
+}
+
+class DefaultPlainAdaper : IPlain {
+    override val title: String
+        get() = ""
+    override val errorMsg: String
+        get() = ""
+}
+
+
+class PlainEdtComponent(
+    val name: String = ""
+) : SubmittedComponent() {
+
+}
 
 class SessionNameComponent : ViewComponent
 
