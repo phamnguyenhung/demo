@@ -1,8 +1,8 @@
 package com.example.myapplication.model
 
 import com.example.myapplication.observable.SelfObservable
-import com.example.myapplication.observable.Validator
 import com.example.myapplication.observable.ValidateAble
+import com.example.myapplication.observable.Validation
 import com.example.myapplication.validator.PhoneValidation
 
 val SESSION_NAME_IDS = listOf(200, 201)
@@ -52,12 +52,16 @@ abstract class SubmittableComponent<T>(var param: String = "") : SelfObservable<
 class PhoneComponent(
     var name: String,
     val title: String = "",
-    validation: ValidateAble = PhoneValidation()
-) : SubmittableComponent<PhoneComponent>(), ValidateAble by validation
+    validation: Validation<String> = PhoneValidation()
+) : SubmittableComponent<PhoneComponent>(), ValidateAble by validation {
+    init {
+        validation.by { name }
+    }
+}
 
-class NoteComponent(val name: String = "") : SubmittableComponent<NoteComponent>()
+class NoteComponent(var name: String = "") : SubmittableComponent<NoteComponent>()
 
-class PlainEdtComponent(val name: String = "") :
+class PlainEdtComponent(var name: String = "") :
     SubmittableComponent<PlainEdtComponent>()
 
 class SessionNameComponent : ViewComponent

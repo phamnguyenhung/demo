@@ -31,11 +31,11 @@ open class PhoneNumberHolder(
     }
 
     override fun onError(error: String) {
-        tvTitle.setTextColor(Color.RED)
+        tvPhoneTitle.setTextColor(Color.RED)
     }
 
     override fun onValid() {
-        tvTitle.setTextColor(Color.BLACK)
+        tvPhoneTitle.setTextColor(Color.BLACK)
     }
 }
 
@@ -60,10 +60,12 @@ class PlainEdtHolder(parent: ViewGroup) :
         }
     }
 
-    override fun onValidate(success: Boolean, error: String?) {
-        itemView.apply {
-            tvErrorMsg.text = if (success) null else error
-        }
+    override fun onValid() {
+        tvErrorMsg.text = null
+    }
+
+    override fun onError(error: String) {
+        tvErrorMsg.text = error
     }
 }
 

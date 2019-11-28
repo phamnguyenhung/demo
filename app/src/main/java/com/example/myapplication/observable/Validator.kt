@@ -7,7 +7,8 @@ interface ValidateAble {
     fun validate()
 }
 
-abstract class Validation<T>(private var function: (() -> T)? = null) : ValidateAble {
+abstract class Validation<T> : ValidateAble {
+    private var function: (() -> T)? = null
     protected open val rules: List<Rule<T>> = emptyList()
     private val value: T get() = function?.invoke() ?: error("Not set value yet!")
 
@@ -18,7 +19,6 @@ abstract class Validation<T>(private var function: (() -> T)? = null) : Validate
 
     protected open fun validate(value: T) {
     }
-
 
     fun by(function: () -> T) {
         this.function = function
