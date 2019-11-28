@@ -1,9 +1,8 @@
 package com.example.myapplication.model
 
 import com.example.myapplication.observable.SelfObservable
-import com.example.myapplication.observable.Validator
-import com.example.myapplication.observable.ValidatorOwner
-import com.example.myapplication.validator.PhoneValidator
+import com.example.myapplication.observable.ValidateAble
+import com.example.myapplication.validator.PhoneValidation
 
 val SESSION_NAME_IDS = listOf(200, 201)
 val PHONE_NUMBER_EDT_IDS = listOf(199)
@@ -27,6 +26,7 @@ enum class ComponentType(val ids: List<Int> = emptyList()) {
         }
     }
 }
+
 
 interface ViewComponent {
     companion object {
@@ -52,18 +52,13 @@ abstract class SubmittableComponent<T>(var param: String = "") : SelfObservable<
 class PhoneComponent(
     var name: String,
     val title: String = "",
-    override var validator: Validator<String> = PhoneValidator()
-) : SubmittableComponent<PhoneComponent>(), ValidatorOwner {
-    override val isValid: Boolean
-        get() = validator.accept(name)
-}
+    validation: ValidateAble = PhoneValidation()
+) : SubmittableComponent<PhoneComponent>(), ValidateAble by validation
 
-class NoteComponent(val name: String = "") : SubmittableComponent<NoteComponent>() {
-}
+class NoteComponent(val name: String = "") : SubmittableComponent<NoteComponent>()
 
 class PlainEdtComponent(val name: String = "") :
-    SubmittableComponent<PlainEdtComponent>() {
-}
+    SubmittableComponent<PlainEdtComponent>()
 
 class SessionNameComponent : ViewComponent
 

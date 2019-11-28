@@ -16,7 +16,7 @@ open class PhoneNumberHolder(
     layoutId: Int = R.layout.item_view_phone_number_edt
 ) : FormViewHolder<PhoneComponent>(parent, layoutId) {
     init {
-        edtPhone.addTextChangedListener(onTextChanged = { text, start, count, after ->
+        edtPhone.addTextChangedListener(onTextChanged = { text, _, _, _ ->
             item?.name = text.toString()
             item?.notifyChange()
         })
@@ -30,9 +30,12 @@ open class PhoneNumberHolder(
         }
     }
 
-    override fun onValidate(success: Boolean, error: String?) {
-        if (success) tvTitle.setTextColor(Color.RED)
-        else tvTitle.setTextColor(Color.BLACK)
+    override fun onError(error: String) {
+        tvTitle.setTextColor(Color.RED)
+    }
+
+    override fun onValid() {
+        tvTitle.setTextColor(Color.BLACK)
     }
 }
 
