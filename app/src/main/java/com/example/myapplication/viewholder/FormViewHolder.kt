@@ -14,6 +14,7 @@ import kotlinx.android.extensions.LayoutContainer
 
 abstract class FormViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView), Observer<T>,
         LayoutContainer {
+
     override val containerView: View?
         get() = itemView
     protected var item: T? = null
@@ -32,7 +33,6 @@ abstract class FormViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemV
         (component as? IObservable<T>)?.subscribe(this)
     }
 
-    @CallSuper
     override fun onChanged(item: T) {
         if (item is ValidateAble) {
             try {
