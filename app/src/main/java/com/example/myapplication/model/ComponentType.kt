@@ -43,8 +43,10 @@ interface ViewComponent {
     val isRequired: Boolean get() = false
 }
 
-abstract class SubmittableComponent<T>(var param: String = "") : SelfObservable<T>(),
-    ViewComponent {
+abstract class SubmittableComponent<T>(
+    var param: String = ""
+) : SelfObservable<T>(), ViewComponent {
+
     override var id: Int = super.id
     override var type: ComponentType = super.type
     override var isRequired: Boolean = super.isRequired
@@ -52,9 +54,10 @@ abstract class SubmittableComponent<T>(var param: String = "") : SelfObservable<
 
 class PhoneComponent(
     var name: String,
-    val title: String = "",
-    override var validator: Validator<String> = PhoneValidator()
+    val title: String = ""
 ) : SubmittableComponent<PhoneComponent>(), ValidatorOwner {
+
+    override var validator: Validator<String> = PhoneValidator()
 
     override val isValid: Boolean
         get() = validator.accept(name)
