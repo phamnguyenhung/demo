@@ -1,6 +1,7 @@
 package com.example.myapplication.model
 
 import com.example.myapplication.observable.SelfObservable
+import com.example.myapplication.observable.Validator
 import com.example.myapplication.observable.ValidateAble
 import com.example.myapplication.validator.PhoneValidation
 
@@ -26,7 +27,6 @@ enum class ComponentType(val ids: List<Int> = emptyList()) {
         }
     }
 }
-
 
 interface ViewComponent {
     companion object {

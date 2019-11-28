@@ -33,7 +33,7 @@ class FormAdapter(view: RecyclerView) : RecyclerView.Adapter<RecyclerView.ViewHo
         return when (viewType) {
             ViewComponent.PHONE_TYPE -> PhoneNumberHolder(parent)
             ViewComponent.NOTE_TYPE -> NoteHolder(parent)
-            ViewComponent.PLAIN_TYPE -> PlainHolder(parent)
+            ViewComponent.PLAIN_TYPE -> PlainEdtHolder(parent)
             ViewComponent.SESSION_NAME_TYPE -> SessionNameHolder(parent)
             ViewComponent.CHECKOUT_BUTTON_TYPE -> CheckoutButtonViewHolder(parent)
             else -> throw Exception("Not support yet!")

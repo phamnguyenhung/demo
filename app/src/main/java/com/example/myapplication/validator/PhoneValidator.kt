@@ -11,3 +11,15 @@ class PhoneValidation(function: (() -> String)? = null) : Validation<String>(fun
         if (value.length >= 6) error("Length should be less than 6")
     }
 }
+
+class RuleContentNotEmpty: Rule<String> {
+
+    override fun accept(item: String): Boolean {
+        return item.isNotEmpty()
+    }
+
+    override fun toString(): String {
+        return "content is empty"
+    }
+}
+
