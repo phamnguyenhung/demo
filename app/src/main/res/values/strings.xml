@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="error_length_at_least_3">Length at least 3 character</string>
+
 </resources>

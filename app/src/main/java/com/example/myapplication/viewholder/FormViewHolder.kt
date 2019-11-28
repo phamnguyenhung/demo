@@ -6,23 +6,23 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapplication.observable.FieldObservable
 import com.example.myapplication.observable.IObservable
-import com.example.myapplication.observable.ValidatorOwner
+import com.example.myapplication.observable.ResourceError
+import com.example.myapplication.observable.ValidateAble
 import kotlinx.android.extensions.LayoutContainer
 
 
 abstract class FormViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView), Observer<T>,
-    LayoutContainer {
+        LayoutContainer {
     override val containerView: View?
         get() = itemView
     protected var item: T? = null
         private set
 
     constructor(parent: ViewGroup, layoutId: Int) : this(
-        LayoutInflater.from(parent.context).inflate(
-            layoutId, parent, false
-        )
+            LayoutInflater.from(parent.context).inflate(
+                    layoutId, parent, false
+            )
     )
 
     @Suppress("unchecked_cast")
@@ -34,13 +34,24 @@ abstract class FormViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemV
 
     @CallSuper
     override fun onChanged(item: T) {
-        if (item is ValidatorOwner) {
-            val isSuccess = item.isValid
-            onValidate(isSuccess, item.validator.error)
+        if (item is ValidateAble) {
+            try {
+                item.validate()
+                onValid()
+            } catch (e: ResourceError) {
+                onError(itemView.resources.getString(e.id))
+            } catch (e: Throwable) {
+                onError(e.message ?: "Unknown")
+            }
         }
     }
 
-    protected open fun onValidate(success: Boolean, error: String?) {
+    protected open fun onValid() {
+
+    }
+
+    protected open fun onError(error: String) {
+
     }
 
     @Suppress("unchecked_cast")

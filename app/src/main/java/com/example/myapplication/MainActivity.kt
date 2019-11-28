@@ -17,7 +17,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         viewModel = MainViewModel(applicationContext)
-
         formAdapter = FormAdapter(rvForm)
 
         viewModel.viewComponents.observe(this, Observer {

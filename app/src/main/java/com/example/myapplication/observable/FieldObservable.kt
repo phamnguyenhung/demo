@@ -62,7 +62,10 @@ class ObservableDelegate<T> : Observable<T>() {
 }
 
 class FieldObservable<T>(default: T) : Observable<T>() {
-    var validator: Validator<T>? = null
+    private var mLastError: Throwable? = null
+
+    val error get() = mLastError
+    var validation: Validation<T>? = null
 
     var value: T = default
         set(value) {
@@ -87,7 +90,14 @@ class FieldObservable<T>(default: T) : Observable<T>() {
     }
 
     fun isValid(): Boolean {
-        return validator?.accept(this.value) ?: true
+        mLastError = null
+        return try {
+            validation?.validate()
+            true
+        } catch (e: Throwable) {
+            mLastError = e
+            false
+        }
     }
 
 }
@@ -139,7 +149,7 @@ fun EditText.bind(field: FieldObservable<String>) {
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     field.value = s.toString()
-                    if (!field.isValid() && field.validator != null) error = field.validator?.error
+                    if (!field.isValid() && field.validation != null) error = field.error?.message
                 }
             },
             field
