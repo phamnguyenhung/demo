@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.model.ValidationErrorCode
+import com.example.myapplication.model.ValidationResult
 import com.example.myapplication.model.ValidationSuccess
 import com.example.myapplication.model.validateErrorCode
 import com.example.myapplication.observable.IObservable
@@ -37,10 +38,11 @@ abstract class FormViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemV
     protected open fun onBind(component: T) {}
 
     override fun onChanged(item: T) {
-        if (shouldValidate() && item is ValidateAble) when (val result = item.validate()) {
-            is ValidationSuccess -> onValid()
-            is ValidationErrorCode -> validateErrorCode[result.code]
-                ?.also { onError(itemView.resources.getString(it)) }
+        if (shouldValidate() && item is ValidateAble) {
+            when (val result = item.validate()) {
+                is ValidationSuccess -> onValid()
+                else -> onError(result)
+            }
         }
     }
 
@@ -50,9 +52,12 @@ abstract class FormViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemV
 
     }
 
-    protected open fun onError(error: String) {
+    protected open fun onError(errorResult: ValidationResult) {
 
     }
+
+    fun ValidationErrorCode.getErrorMsg() = validateErrorCode[this.code] ?: -1
+
 
     @Suppress("unchecked_cast")
     open fun onRecycled() {

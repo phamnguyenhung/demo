@@ -35,7 +35,10 @@ class MainViewModel(loader: ResourceLoader) : ViewModel() {
             val data = gson.fromJson(
                 loader.open("address-delivery-container-sg.json")
                     .bufferedReader()
-                    .use { it.readText() }, ViewComponentDTO::class.java
+                    .use {
+                        it.readText()
+                    },
+                ViewComponentDTO::class.java
             )
             viewComponents.postValue(ViewComponentsOf(data))
         }

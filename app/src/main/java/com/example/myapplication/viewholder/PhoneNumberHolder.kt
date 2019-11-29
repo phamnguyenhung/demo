@@ -5,19 +5,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import com.example.myapplication.R
-import com.example.myapplication.model.NoteComponent
-import com.example.myapplication.model.PhoneComponent
-import com.example.myapplication.model.PlainEdtComponent
-import com.example.myapplication.model.SessionNameComponent
+import com.example.myapplication.model.*
 import kotlinx.android.synthetic.main.item_view_note_edt.*
 import kotlinx.android.synthetic.main.item_view_phone_number_edt.*
 import kotlinx.android.synthetic.main.item_view_plain_edt.*
 
 
 open class PhoneNumberHolder(
-    parent: ViewGroup,
-    layoutId: Int = R.layout.item_view_phone_number_edt
+        parent: ViewGroup,
+        layoutId: Int = R.layout.item_view_phone_number_edt
 ) : FormViewHolder<PhoneComponent>(parent, layoutId) {
+
     init {
         edtPhone.addTextChangedListener(onTextChanged = { text, _, _, _ ->
             item?.name = text.toString()
@@ -29,9 +27,11 @@ open class PhoneNumberHolder(
         tvPhoneErrorMsg.visibility = View.GONE
     }
 
-    override fun onError(error: String) {
-        tvPhoneErrorMsg.text = error
-        tvPhoneErrorMsg.visibility = View.VISIBLE
+    override fun onError(errorResult: ValidationResult) {
+        if (errorResult is ValidationErrorCode) {
+            tvPhoneErrorMsg.text = itemView.resources.getString(errorResult.getErrorMsg())
+            tvPhoneErrorMsg.visibility = View.VISIBLE
+        }
     }
 
     override fun shouldValidate(): Boolean {
@@ -47,7 +47,7 @@ open class PhoneNumberHolder(
 }
 
 class NoteHolder(parent: ViewGroup) :
-    FormViewHolder<NoteComponent>(parent, R.layout.item_view_note_edt) {
+        FormViewHolder<NoteComponent>(parent, R.layout.item_view_note_edt) {
     override fun onBind(component: NoteComponent) {
         edtNote.setText(component.name)
         edtNote.hint = component.hint
@@ -55,7 +55,7 @@ class NoteHolder(parent: ViewGroup) :
 }
 
 class PlainEdtHolder(parent: ViewGroup) :
-    FormViewHolder<PlainEdtComponent>(parent, R.layout.item_view_plain_edt) {
+        FormViewHolder<PlainEdtComponent>(parent, R.layout.item_view_plain_edt) {
 
     init {
         edtContent.addTextChangedListener(onTextChanged = { text, _, _, _ ->
@@ -78,11 +78,13 @@ class PlainEdtHolder(parent: ViewGroup) :
         tvErrorMsg.visibility = View.GONE
     }
 
-    override fun onError(error: String) {
-        tvErrorMsg.visibility = View.VISIBLE
-        tvErrorMsg.text = error
+    override fun onError(errorResult: ValidationResult) {
+        if (errorResult is ValidationErrorCode) {
+            tvErrorMsg.visibility = View.VISIBLE
+            tvErrorMsg.text = itemView.resources.getString(errorResult.getErrorMsg())
+        }
     }
 }
 
 class SessionNameHolder(parent: ViewGroup) :
-    FormViewHolder<SessionNameComponent>(parent, R.layout.item_view_session_name)
+        FormViewHolder<SessionNameComponent>(parent, R.layout.item_view_session_name)
