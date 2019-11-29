@@ -13,16 +13,17 @@ import kotlinx.android.extensions.LayoutContainer
 
 
 abstract class FormViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView), Observer<T>,
-    LayoutContainer {
+        LayoutContainer {
+
     override val containerView: View?
         get() = itemView
     protected var item: T? = null
         private set
 
     constructor(parent: ViewGroup, layoutId: Int) : this(
-        LayoutInflater.from(parent.context).inflate(
-            layoutId, parent, false
-        )
+            LayoutInflater.from(parent.context).inflate(
+                    layoutId, parent, false
+            )
     )
 
     @Suppress("unchecked_cast")
@@ -32,15 +33,15 @@ abstract class FormViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemV
         (component as? IObservable<T>)?.subscribe(this)
     }
 
-    @CallSuper
     override fun onChanged(item: T) {
         if (item is ValidateAble) {
             try {
                 item.validate()
                 onValid()
+            } catch (e: ResourceError) {
+                onError(itemView.resources.getString(e.id))
             } catch (e: Throwable) {
-                if (e is ResourceError) onError(itemView.resources.getString(e.id))
-                else onError(e.message ?: "Unknown")
+                onError(e.message ?: "Unknown")
             }
         }
     }

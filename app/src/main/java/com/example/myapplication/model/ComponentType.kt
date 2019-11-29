@@ -42,7 +42,9 @@ interface ViewComponent {
     val isRequired: Boolean get() = false
 }
 
-abstract class SubmittableComponent<T>(var param: String = "") : SelfObservable<T>(),
+abstract class SubmittableComponent<T>(
+    var param: String = ""
+) : SelfObservable<T>(),
     ViewComponent {
     override var id: Int = super.id
     override var type: ComponentType = super.type
@@ -52,7 +54,7 @@ abstract class SubmittableComponent<T>(var param: String = "") : SelfObservable<
 class PhoneComponent(
     var name: String,
     val title: String = "",
-    validation: Validation<String> = PhoneValidation()
+    private val validation: Validation<String> = PhoneValidation()
 ) : SubmittableComponent<PhoneComponent>(), ValidateAble by validation {
     init {
         validation.by { name }

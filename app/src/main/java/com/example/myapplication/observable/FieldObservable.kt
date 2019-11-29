@@ -31,7 +31,9 @@ abstract class Observable<T> : IObservable<T> {
     }
 
     override fun notifyChange() {
-        mObservers.forEach { notifyChange(it) }
+        mObservers.forEach {
+            notifyChange(it)
+        }
     }
 
     protected abstract fun notifyChange(observer: Observer<T>)
@@ -44,6 +46,7 @@ abstract class Observable<T> : IObservable<T> {
 }
 
 abstract class SelfObservable<T> : Observable<T>(), ObservableOwner {
+
     override val observable: IObservable<Any>
         get() = asAnyObservable()
 
@@ -55,13 +58,14 @@ abstract class SelfObservable<T> : Observable<T>(), ObservableOwner {
 
 class ObservableDelegate<T> : Observable<T>() {
     override fun notifyChange(observer: Observer<T>) {
-        observer.onChanged(default ?: error("Not setted yet!"))
+        observer.onChanged(default ?: error("Have not set yet!"))
     }
 
     var default: T? = null
 }
 
 class FieldObservable<T>(default: T) : Observable<T>() {
+
     private var mLastError: Throwable? = null
 
     val error get() = mLastError

@@ -1,10 +1,13 @@
 package com.example.myapplication.observable
 
 import androidx.annotation.StringRes
+import com.example.myapplication.model.ValidationErrorCode
+import com.example.myapplication.model.ValidationResult
+import com.example.myapplication.model.ValidationSuccess
 
 
 interface ValidateAble {
-    fun validate()
+    fun validate(): ValidationResult
 }
 
 abstract class Validation<T> : ValidateAble {
@@ -12,12 +15,17 @@ abstract class Validation<T> : ValidateAble {
     protected open val rules: List<Rule<T>> = emptyList()
     private val value: T get() = function?.invoke() ?: error("Not set value yet!")
 
-    final override fun validate() {
-        rules.forEach { it.validate(value) }
-        validate(value)
+    final override fun validate(): ValidationResult {
+        for (rule in rules) {
+            val result = rule.validate(value)
+            if (result is ValidationErrorCode) return result
+        }
+
+        return validate(value)
     }
 
-    protected open fun validate(value: T) {
+    protected open fun validate(value: T): ValidationResult {
+        return ValidationSuccess()
     }
 
     fun by(function: () -> T) {
@@ -26,13 +34,17 @@ abstract class Validation<T> : ValidateAble {
 }
 
 interface Rule<T> {
-    @Throws
-    fun validate(item: T)
+    fun validate(item: T): ValidationResult{
+        return ValidationSuccess()
+    }
 }
-
 
 operator fun <T> Rule<T>.plus(rule: Rule<T>): List<Rule<T>> {
     return arrayListOf(this, rule)
+}
+
+fun <T> Rule<T>.asList(): List<Rule<T>> {
+    return arrayListOf(this)
 }
 
 fun Validation<*>.asList(): List<Validation<*>> {
@@ -43,8 +55,12 @@ interface Validator : ValidateAble {
 
     val validations: List<Validation<*>>
 
-    override fun validate() {
-        validations.forEach { it.validate() }
+    override fun validate(): ValidationResult {
+        for (validation in validations) {
+            val result = validation.validate()
+            if (result is ValidationErrorCode) return result
+        }
+        return ValidationSuccess()
     }
 
 }
