@@ -43,7 +43,7 @@ class FormAdapter(view: RecyclerView) : RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Suppress("unchecked_cast")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as? FormViewHolder<ViewComponent>)?.onBind(mItems[position])
+        (holder as? FormViewHolder<ViewComponent>)?.bind(mItems[position])
     }
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {

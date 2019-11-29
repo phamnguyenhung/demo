@@ -3,7 +3,6 @@ package com.example.myapplication.viewholder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.CallSuper
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.model.ValidationErrorCode
@@ -29,11 +28,13 @@ abstract class FormViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemV
     )
 
     @Suppress("unchecked_cast")
-    @CallSuper
-    open fun onBind(component: T) {
+    fun bind(component: T) {
         item = component
         (component as? IObservable<T>)?.subscribe(this)
+        onBind(component)
     }
+
+    protected open fun onBind(component: T) {}
 
     override fun onChanged(item: T) {
         if (shouldValidate() && item is ValidateAble) when (val result = item.validate()) {

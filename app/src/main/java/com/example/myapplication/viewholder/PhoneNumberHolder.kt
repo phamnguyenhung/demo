@@ -39,7 +39,6 @@ open class PhoneNumberHolder(
     }
 
     override fun onBind(component: PhoneComponent) {
-        super.onBind(component)
         tvPhoneTitle.text = component.title
         edtPhone.setText(component.name)
         edtPhone.hint = component.hint
@@ -50,7 +49,6 @@ open class PhoneNumberHolder(
 class NoteHolder(parent: ViewGroup) :
     FormViewHolder<NoteComponent>(parent, R.layout.item_view_note_edt) {
     override fun onBind(component: NoteComponent) {
-        super.onBind(component)
         edtNote.setText(component.name)
         edtNote.hint = component.hint
     }
@@ -67,7 +65,6 @@ class PlainEdtHolder(parent: ViewGroup) :
     }
 
     override fun onBind(component: PlainEdtComponent) {
-        super.onBind(component)
         edtContent.setText(component.name)
         edtContent.hint = component.hint
         tvPlainTitle.text = component.hint
