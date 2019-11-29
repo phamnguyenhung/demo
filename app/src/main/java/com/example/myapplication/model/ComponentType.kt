@@ -34,7 +34,6 @@ interface ViewComponent {
         const val NOTE_TYPE = 1
         const val PLAIN_TYPE = 2
         const val SESSION_NAME_TYPE = 3
-        const val CHECKOUT_BUTTON_TYPE = 4
     }
 
     val id: Int get() = 0
@@ -52,7 +51,8 @@ abstract class SubmittableComponent<T>(
 }
 
 class PhoneComponent(
-    var name: String,
+    val hint: String,
+    var name: String = "",
     val title: String = "",
     private val validation: Validation<String> = PhoneValidation()
 ) : SubmittableComponent<PhoneComponent>(), ValidateAble by validation {
@@ -61,11 +61,18 @@ class PhoneComponent(
     }
 }
 
-class NoteComponent(var name: String = "") : SubmittableComponent<NoteComponent>()
+class NoteComponent(var name: String = "", val hint: String = "Note") :
+    SubmittableComponent<NoteComponent>()
 
-class PlainEdtComponent(var name: String = "") :
-    SubmittableComponent<PlainEdtComponent>()
+class PlainEdtComponent(
+    val hint: String,
+    var name: String = "",
+    private val validation: Validation<String> = PhoneValidation()
+) : SubmittableComponent<PlainEdtComponent>(), ValidateAble by validation {
+    init {
+        validation.by { name }
+    }
+}
 
 class SessionNameComponent : ViewComponent
 
-class CheckoutButtonComponent : ViewComponent

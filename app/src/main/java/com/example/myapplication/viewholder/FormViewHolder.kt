@@ -6,14 +6,16 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapplication.model.ValidationErrorCode
+import com.example.myapplication.model.ValidationSuccess
+import com.example.myapplication.model.validateErrorCode
 import com.example.myapplication.observable.IObservable
-import com.example.myapplication.observable.ResourceError
 import com.example.myapplication.observable.ValidateAble
 import kotlinx.android.extensions.LayoutContainer
 
 
 abstract class FormViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView), Observer<T>,
-        LayoutContainer {
+    LayoutContainer {
 
     override val containerView: View?
         get() = itemView
@@ -21,9 +23,9 @@ abstract class FormViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemV
         private set
 
     constructor(parent: ViewGroup, layoutId: Int) : this(
-            LayoutInflater.from(parent.context).inflate(
-                    layoutId, parent, false
-            )
+        LayoutInflater.from(parent.context).inflate(
+            layoutId, parent, false
+        )
     )
 
     @Suppress("unchecked_cast")
@@ -34,17 +36,14 @@ abstract class FormViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemV
     }
 
     override fun onChanged(item: T) {
-        if (item is ValidateAble) {
-            try {
-                item.validate()
-                onValid()
-            } catch (e: ResourceError) {
-                onError(itemView.resources.getString(e.id))
-            } catch (e: Throwable) {
-                onError(e.message ?: "Unknown")
-            }
+        if (shouldValidate() && item is ValidateAble) when (val result = item.validate()) {
+            is ValidationSuccess -> onValid()
+            is ValidationErrorCode -> validateErrorCode[result.code]
+                ?.also { onError(itemView.resources.getString(it)) }
         }
     }
+
+    protected open fun shouldValidate(): Boolean = false
 
     protected open fun onValid() {
 

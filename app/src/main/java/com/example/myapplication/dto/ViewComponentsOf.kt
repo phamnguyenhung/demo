@@ -2,7 +2,7 @@ package com.example.myapplication.dto
 
 import com.example.myapplication.model.*
 
-class ViewComponentDTOMapper {
+object ViewComponentsOf {
 
     operator fun invoke(viewComponentDto: ViewComponentDTO): List<ViewComponent> {
         val result = mutableListOf<ViewComponent>()
@@ -36,16 +36,16 @@ class ViewComponentDTOMapper {
         }
 
     private fun toPlain(item: Item) = PlainEdtComponent(
-        name = item.name
+        hint = item.name
     ).apply {
         isRequired = item.isRequired
         param = item.param
         id = item.id
-        type = ComponentType.PHONE_NUMBER_EDT
+        type = ComponentType.PLAIN_EDT
     }
 
     private fun toPhoneComponent(item: Item) = PhoneComponent(
-        name = item.name,
+        hint = item.name,
         title = item.title
     ).apply {
         isRequired = item.isRequired

@@ -8,6 +8,7 @@ import com.example.myapplication.model.ValidationSuccess
 
 interface ValidateAble {
     fun validate(): ValidationResult
+    val isValid get() = validate() is ValidationSuccess
 }
 
 abstract class Validation<T> : ValidateAble {
@@ -25,7 +26,7 @@ abstract class Validation<T> : ValidateAble {
     }
 
     protected open fun validate(value: T): ValidationResult {
-        return ValidationSuccess()
+        return ValidationResult.SUCCESS
     }
 
     fun by(function: () -> T) {
@@ -34,7 +35,7 @@ abstract class Validation<T> : ValidateAble {
 }
 
 interface Rule<T> {
-    fun validate(item: T): ValidationResult{
+    fun validate(item: T): ValidationResult {
         return ValidationSuccess()
     }
 }

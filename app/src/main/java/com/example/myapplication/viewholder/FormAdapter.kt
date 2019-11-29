@@ -35,7 +35,6 @@ class FormAdapter(view: RecyclerView) : RecyclerView.Adapter<RecyclerView.ViewHo
             ViewComponent.NOTE_TYPE -> NoteHolder(parent)
             ViewComponent.PLAIN_TYPE -> PlainEdtHolder(parent)
             ViewComponent.SESSION_NAME_TYPE -> SessionNameHolder(parent)
-            ViewComponent.CHECKOUT_BUTTON_TYPE -> CheckoutButtonViewHolder(parent)
             else -> throw Exception("Not support yet!")
         }
     }
@@ -57,7 +56,6 @@ class FormAdapter(view: RecyclerView) : RecyclerView.Adapter<RecyclerView.ViewHo
         is NoteComponent -> ViewComponent.NOTE_TYPE
         is PlainEdtComponent -> ViewComponent.PLAIN_TYPE
         is SessionNameComponent -> ViewComponent.SESSION_NAME_TYPE
-        is CheckoutButtonComponent -> ViewComponent.CHECKOUT_BUTTON_TYPE
         else -> error("not support")
     }
 }

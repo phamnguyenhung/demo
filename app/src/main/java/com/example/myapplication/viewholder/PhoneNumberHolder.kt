@@ -5,14 +5,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import com.example.myapplication.R
-import com.example.myapplication.model.*
+import com.example.myapplication.model.NoteComponent
+import com.example.myapplication.model.PhoneComponent
+import com.example.myapplication.model.PlainEdtComponent
+import com.example.myapplication.model.SessionNameComponent
+import kotlinx.android.synthetic.main.item_view_note_edt.*
 import kotlinx.android.synthetic.main.item_view_phone_number_edt.*
 import kotlinx.android.synthetic.main.item_view_plain_edt.*
 
 
 open class PhoneNumberHolder(
-        parent: ViewGroup,
-        layoutId: Int = R.layout.item_view_phone_number_edt
+    parent: ViewGroup,
+    layoutId: Int = R.layout.item_view_phone_number_edt
 ) : FormViewHolder<PhoneComponent>(parent, layoutId) {
     init {
         edtPhone.addTextChangedListener(onTextChanged = { text, _, _, _ ->
@@ -21,50 +25,39 @@ open class PhoneNumberHolder(
         })
     }
 
-    override fun onChanged(item: PhoneComponent) {
-        //super.onChanged(item)
-        when (val validationResult = item.validate()) {
-            is ValidationErrorCode -> {
-                validateErrorCode[validationResult.code]?.let { resourceId ->
-                    val errorMsg = itemView.resources.getString(resourceId)
-                    tvPhoneErrorMsg.text = errorMsg
-                }
-            }
-            is ValidationSuccess -> {
+    override fun onValid() {
+        tvPhoneErrorMsg.visibility = View.GONE
+    }
 
-            }
-            else -> {
+    override fun onError(error: String) {
+        tvPhoneErrorMsg.text = error
+        tvPhoneErrorMsg.visibility = View.VISIBLE
+    }
 
-            }
-        }
+    override fun shouldValidate(): Boolean {
+        return edtPhone.isFocused
     }
 
     override fun onBind(component: PhoneComponent) {
         super.onBind(component)
-        itemView.apply {
-            tvPhoneTitle.text = component.title
-            edtPhone.hint = component.name
-        }
-    }
-
-    override fun onError(error: String) {
-        tvPhoneTitle.setTextColor(Color.RED)
-        tvPhoneErrorMsg.apply {
-            text = null
-            visibility = View.VISIBLE
-        }
-    }
-
-    override fun onValid() {
-        tvPhoneTitle.setTextColor(Color.BLACK)
+        tvPhoneTitle.text = component.title
+        edtPhone.setText(component.name)
+        edtPhone.hint = component.hint
+        tvPhoneErrorMsg.setTextColor(Color.RED)
     }
 }
 
 class NoteHolder(parent: ViewGroup) :
-        FormViewHolder<PhoneComponent>(parent, R.layout.item_view_phone_number_edt)
+    FormViewHolder<NoteComponent>(parent, R.layout.item_view_note_edt) {
+    override fun onBind(component: NoteComponent) {
+        super.onBind(component)
+        edtNote.setText(component.name)
+        edtNote.hint = component.hint
+    }
+}
 
 class PlainEdtHolder(parent: ViewGroup) :
-        FormViewHolder<PlainEdtComponent>(parent, R.layout.item_view_plain_edt) {
+    FormViewHolder<PlainEdtComponent>(parent, R.layout.item_view_plain_edt) {
 
     init {
         edtContent.addTextChangedListener(onTextChanged = { text, _, _, _ ->
@@ -75,20 +68,24 @@ class PlainEdtHolder(parent: ViewGroup) :
 
     override fun onBind(component: PlainEdtComponent) {
         super.onBind(component)
-        itemView.apply {
-            tvTitle.text = component.name
-            edtContent.hint = component.name
-        }
+        edtContent.setText(component.name)
+        edtContent.hint = component.hint
+        tvPlainTitle.text = component.hint
+    }
+
+    override fun shouldValidate(): Boolean {
+        return edtContent.isFocused
     }
 
     override fun onValid() {
-        tvErrorMsg.text = null
+        tvErrorMsg.visibility = View.GONE
     }
 
     override fun onError(error: String) {
+        tvErrorMsg.visibility = View.VISIBLE
         tvErrorMsg.text = error
     }
 }
 
 class SessionNameHolder(parent: ViewGroup) :
-        FormViewHolder<SessionNameComponent>(parent, R.layout.item_view_session_name)
+    FormViewHolder<SessionNameComponent>(parent, R.layout.item_view_session_name)

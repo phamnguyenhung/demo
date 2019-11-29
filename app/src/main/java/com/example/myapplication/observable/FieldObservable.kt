@@ -106,11 +106,11 @@ class FieldObservable<T>(default: T) : Observable<T>() {
 
 }
 
-fun allOf(values: List<FieldObservable<*>>): LiveData<Any> {
-    val next = MediatorLiveData<Any>()
+fun allOf(values: List<Observable<out Any>>): LiveData<List<Observable<out Any>>> {
+    val next = MediatorLiveData<List<Observable<out Any>>>()
     values.forEach {
         it.asAnyObservable().subscribe(Observer {
-            next.value = it
+            next.value = values
         })
     }
     return next

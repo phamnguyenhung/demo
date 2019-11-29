@@ -21,7 +21,7 @@ class InitViewModelTest {
     fun testLoadDataFromJsonConfig() {
         val file = "address-delivery-container-sg.json"
 
-        Mockito.`when`(loader.streamOf(file))
+        Mockito.`when`(loader.open(file))
             .thenReturn(javaClass.classLoader!!.getResource(file).openStream())
 
         viewModel = MainViewModel(loader)

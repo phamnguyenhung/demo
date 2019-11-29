@@ -1,10 +1,18 @@
 package com.example.myapplication.model
 
 
-interface ValidationResult
+interface ValidationResult {
+    companion object {
+        val SUCCESS = ValidationSuccess()
+    }
+}
 
 class ValidationErrorCode(
-        val code: String
+    val code: Int
 ) : ValidationResult
 
-class ValidationSuccess : ValidationResult
+open class ValidationSuccess : ValidationResult
+
+class ValidationSuccessCode(
+    val code: Int
+) : ValidationSuccess()
