@@ -42,37 +42,38 @@ interface ViewComponent {
 }
 
 abstract class SubmittableComponent<T>(
-    var param: String = ""
+        var param: String = "",
+        var name: String = ""
 ) : SelfObservable<T>(),
-    ViewComponent {
+        ViewComponent {
     override var id: Int = super.id
     override var type: ComponentType = super.type
     override var isRequired: Boolean = super.isRequired
 }
 
 class PhoneComponent(
-    val hint: String,
-    var name: String = "",
-    val title: String = "",
-    private val validation: Validation<String> = PhoneValidation()
+        val hint: String,
+        val title: String = "",
+        private val validation: Validation<String> = PhoneValidation()
 ) : SubmittableComponent<PhoneComponent>(), ValidateAble by validation {
     init {
         validation.by { name }
     }
 }
 
-class NoteComponent(var name: String = "", val hint: String = "Note") :
-    SubmittableComponent<NoteComponent>()
+class NoteComponent(
+        val hint: String = "Note"
+) : SubmittableComponent<NoteComponent>()
 
 class PlainEdtComponent(
-    val hint: String,
-    var name: String = "",
-    private val validation: Validation<String> = PhoneValidation()
+        val hint: String,
+        private val validation: Validation<String> = PhoneValidation()
 ) : SubmittableComponent<PlainEdtComponent>(), ValidateAble by validation {
     init {
         validation.by { name }
     }
 }
 
-class SessionNameComponent : ViewComponent
-
+class SessionNameComponent(
+        val name: String = ""
+) : ViewComponent

@@ -2,5 +2,7 @@
     <string name="app_name">My Application</string>
     <string name="error_length_at_least_3">Length at least 3 character</string>
     <string name="error_length_should_be_less_than_6">Length should be less than 6</string>
+    <string name="wrong_format">Wrong format</string>
+    <string name="content_is_empty">Content is empty</string>
 
 </resources>

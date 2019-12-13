@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.model.*
 
 class DetachAdapter : View.OnAttachStateChangeListener {
+
     override fun onViewAttachedToWindow(v: View?) {}
 
     override fun onViewDetachedFromWindow(v: View?) {
@@ -43,12 +44,12 @@ class FormAdapter(view: RecyclerView) : RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Suppress("unchecked_cast")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as? FormViewHolder<ViewComponent>)?.bind(mItems[position])
+        (holder as? FormViewHolder<ViewComponent, *>)?.bind(mItems[position])
     }
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         super.onViewRecycled(holder)
-        (holder as? FormViewHolder<*>)?.onRecycled()
+        (holder as? FormViewHolder<*, *>)?.onRecycled()
     }
 
     override fun getItemViewType(position: Int) = when (mItems[position]) {

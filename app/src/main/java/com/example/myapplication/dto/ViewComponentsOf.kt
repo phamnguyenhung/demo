@@ -1,6 +1,7 @@
 package com.example.myapplication.dto
 
 import com.example.myapplication.model.*
+import com.example.myapplication.validator.EmailValidation
 
 object ViewComponentsOf {
 
@@ -12,8 +13,22 @@ object ViewComponentsOf {
             }
 
             if (it.hasNote) {
-                result += NoteComponent()
+                result += NoteComponent().apply {
+                    param = "note"
+                }
             }
+
+            // additional component
+            result += PlainEdtComponent(
+                    hint = "Email",
+                    validation = EmailValidation()
+            ).apply {
+                param = "email"
+            }
+
+            result += SessionNameComponent(
+                    name = "Title Name"
+            )
         }
         return result
     }
@@ -25,18 +40,18 @@ object ViewComponentsOf {
     }
 
     private fun MutableList<ViewComponent>.onTraversal(item: Item) =
-        when (ComponentType.getTypeById(item.id)) {
-            ComponentType.SESSION_NAME -> {
+            when (ComponentType.getTypeById(item.id)) {
+                ComponentType.SESSION_NAME -> {
+                }
+                ComponentType.PHONE_NUMBER_EDT -> this += toPhoneComponent(item)
+                ComponentType.PLAIN_EDT -> this += toPlain(item)
+                ComponentType.NOTE_EDT -> this += NoteComponent()
+                else -> {
+                }
             }
-            ComponentType.PHONE_NUMBER_EDT -> this += toPhoneComponent(item)
-            ComponentType.PLAIN_EDT -> this += toPlain(item)
-            ComponentType.NOTE_EDT -> this += NoteComponent()
-            else -> {
-            }
-        }
 
     private fun toPlain(item: Item) = PlainEdtComponent(
-        hint = item.name
+            hint = item.name
     ).apply {
         isRequired = item.isRequired
         param = item.param
@@ -45,8 +60,8 @@ object ViewComponentsOf {
     }
 
     private fun toPhoneComponent(item: Item) = PhoneComponent(
-        hint = item.name,
-        title = item.title
+            hint = item.name,
+            title = item.title
     ).apply {
         isRequired = item.isRequired
         param = item.param

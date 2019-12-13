@@ -11,8 +11,13 @@ const val GREATER_THAN_4 = 3
 const val GREATER_THAN_5 = 4
 const val GREATER_THAN_6 = 5
 
+const val WRONG_FORMAT = 6
+const val CONTENT_EMPTY = 7
+
 val validateErrorCode = mapOf(
-    UN_KNOW to 0,
-    SMALLER_THAN_3 to R.string.error_length_at_least_3,
-    GREATER_THAN_6 to R.string.error_length_should_be_less_than_6
+        UN_KNOW to 0,
+        SMALLER_THAN_3 to R.string.error_length_at_least_3,
+        GREATER_THAN_6 to R.string.error_length_should_be_less_than_6,
+        WRONG_FORMAT to R.string.wrong_format,
+        CONTENT_EMPTY to R.string.content_is_empty
 )

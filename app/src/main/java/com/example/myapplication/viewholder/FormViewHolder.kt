@@ -3,6 +3,9 @@ package com.example.myapplication.viewholder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.model.ValidationErrorCode
@@ -14,18 +17,24 @@ import com.example.myapplication.observable.ValidateAble
 import kotlinx.android.extensions.LayoutContainer
 
 
-abstract class FormViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView), Observer<T>,
-    LayoutContainer {
+abstract class FormViewHolder<T, V : ViewDataBinding>(
+        val viewBinding: V
+) : RecyclerView.ViewHolder(viewBinding.root), Observer<T>,
+        LayoutContainer {
 
     override val containerView: View?
         get() = itemView
+
     protected var item: T? = null
         private set
 
-    constructor(parent: ViewGroup, layoutId: Int) : this(
-        LayoutInflater.from(parent.context).inflate(
-            layoutId, parent, false
-        )
+    constructor(parent: ViewGroup, @LayoutRes layoutId: Int) : this(
+            DataBindingUtil.inflate(
+                    LayoutInflater.from(parent.context),
+                    layoutId,
+                    parent,
+                    false
+            )
     )
 
     @Suppress("unchecked_cast")

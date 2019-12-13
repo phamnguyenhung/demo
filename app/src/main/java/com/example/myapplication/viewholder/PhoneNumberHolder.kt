@@ -3,88 +3,120 @@ package com.example.myapplication.viewholder
 import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import com.example.myapplication.R
+import com.example.myapplication.databinding.ItemViewCheckErrorEdtBinding
+import com.example.myapplication.databinding.ItemViewSessionNameBinding
 import com.example.myapplication.model.*
-import kotlinx.android.synthetic.main.item_view_note_edt.*
-import kotlinx.android.synthetic.main.item_view_phone_number_edt.*
-import kotlinx.android.synthetic.main.item_view_plain_edt.*
-
+import com.example.myapplication.widget.addTextChangedListener
 
 open class PhoneNumberHolder(
-        parent: ViewGroup,
-        layoutId: Int = R.layout.item_view_phone_number_edt
-) : FormViewHolder<PhoneComponent>(parent, layoutId) {
+        parent: ViewGroup
+) : FormViewHolder<PhoneComponent, ItemViewCheckErrorEdtBinding>(
+        parent,
+        R.layout.item_view_check_error_edt
+) {
 
     init {
-        edtPhone.addTextChangedListener(onTextChanged = { text, _, _, _ ->
-            item?.name = text.toString()
-            item?.notifyChange()
-        })
+        viewBinding.edtMain.addTextChangedListener(
+                onTextChanged = { text, _, _, _ ->
+                    item?.name = text.toString()
+                    item?.notifyChange()
+                })
     }
 
     override fun onValid() {
-        tvPhoneErrorMsg.visibility = View.GONE
+        viewBinding.tvErrorMsg.visibility = View.GONE
     }
 
     override fun onError(errorResult: ValidationResult) {
         if (errorResult is ValidationErrorCode) {
-            tvPhoneErrorMsg.text = itemView.resources.getString(errorResult.getErrorMsg())
-            tvPhoneErrorMsg.visibility = View.VISIBLE
+            viewBinding.tvErrorMsg.apply {
+                text = itemView.resources.getString(errorResult.getErrorMsg())
+                visibility = View.VISIBLE
+            }
         }
     }
 
     override fun shouldValidate(): Boolean {
-        return edtPhone.isFocused
+        return viewBinding.edtMain.isFocused
     }
 
     override fun onBind(component: PhoneComponent) {
-        tvPhoneTitle.text = component.title
-        edtPhone.setText(component.name)
-        edtPhone.hint = component.hint
-        tvPhoneErrorMsg.setTextColor(Color.RED)
+        viewBinding.apply {
+            tvTitle.text = component.title
+            edtMain.setText(component.name)
+            edtMain.setHint(component.hint)
+            tvErrorMsg.setTextColor(Color.RED)
+        }
     }
 }
 
 class NoteHolder(parent: ViewGroup) :
-        FormViewHolder<NoteComponent>(parent, R.layout.item_view_note_edt) {
+        FormViewHolder<NoteComponent, ItemViewCheckErrorEdtBinding>(
+                parent,
+                R.layout.item_view_check_error_edt) {
+
+    init {
+        viewBinding.edtMain.addTextChangedListener(
+                onTextChanged = { text, _, _, _ ->
+                    item?.name = text.toString()
+                    item?.notifyChange()
+                }
+        )
+    }
+
     override fun onBind(component: NoteComponent) {
-        edtNote.setText(component.name)
-        edtNote.hint = component.hint
+        viewBinding.apply {
+            edtMain.setText(component.name)
+            edtMain.setHint(component.hint)
+        }
     }
 }
 
 class PlainEdtHolder(parent: ViewGroup) :
-        FormViewHolder<PlainEdtComponent>(parent, R.layout.item_view_plain_edt) {
+        FormViewHolder<PlainEdtComponent, ItemViewCheckErrorEdtBinding>(
+                parent,
+                R.layout.item_view_check_error_edt) {
 
     init {
-        edtContent.addTextChangedListener(onTextChanged = { text, _, _, _ ->
+        viewBinding.edtMain.addTextChangedListener(onTextChanged = { text, _, _, _ ->
             item?.name = text.toString()
             item?.notifyChange()
         })
     }
 
     override fun onBind(component: PlainEdtComponent) {
-        edtContent.setText(component.name)
-        edtContent.hint = component.hint
-        tvPlainTitle.text = component.hint
+        viewBinding.apply {
+            edtMain.setText(component.name)
+            edtMain.setHint(component.hint)
+            tvTitle.text = component.hint
+        }
     }
 
     override fun shouldValidate(): Boolean {
-        return edtContent.isFocused
+        return viewBinding.edtMain.isFocused
     }
 
     override fun onValid() {
-        tvErrorMsg.visibility = View.GONE
+        viewBinding.tvErrorMsg.visibility = View.GONE
     }
 
     override fun onError(errorResult: ValidationResult) {
         if (errorResult is ValidationErrorCode) {
-            tvErrorMsg.visibility = View.VISIBLE
-            tvErrorMsg.text = itemView.resources.getString(errorResult.getErrorMsg())
+            viewBinding.tvErrorMsg.apply {
+                visibility = View.VISIBLE
+                text = itemView.resources.getString(errorResult.getErrorMsg())
+            }
         }
     }
 }
 
 class SessionNameHolder(parent: ViewGroup) :
-        FormViewHolder<SessionNameComponent>(parent, R.layout.item_view_session_name)
+        FormViewHolder<SessionNameComponent, ItemViewSessionNameBinding>(
+                parent,
+                R.layout.item_view_session_name) {
+
+    override fun onBind(component: SessionNameComponent) {
+        viewBinding.tvTitle.text = component.name
+    }
+}

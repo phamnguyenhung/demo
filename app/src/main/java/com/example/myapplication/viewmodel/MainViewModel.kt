@@ -7,6 +7,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.myapplication.dto.ViewComponentDTO
 import com.example.myapplication.dto.ViewComponentsOf
+import com.example.myapplication.model.SubmittableComponent
 import com.example.myapplication.model.ViewComponent
 import com.example.myapplication.observable.Observable
 import com.example.myapplication.observable.ValidateAble
@@ -19,33 +20,48 @@ interface ResourceLoader {
 }
 
 class MainViewModel(loader: ResourceLoader) : ViewModel() {
-    val submitSuccess = MutableLiveData<String>()
+
+    val requestPayload = MutableLiveData<Map<String, String>>()
     private val gson = Gson()
 
     val viewComponents = MutableLiveData<List<ViewComponent>>()
 
     val isReadyToMakeOrder = viewComponents.switchMap {
         allOf(it.filterIsInstance<Observable<out Any>>())
-    }.map {
-        it.filterIsInstance(ValidateAble::class.java).all { it.isValid }
+    }.map { observables ->
+        observables
+                .filterIsInstance(ValidateAble::class.java)
+                .all {
+                    it.isValid
+                }
     }
 
     init {
         ArchTaskExecutor.getIOThreadExecutor().execute {
             val data = gson.fromJson(
-                loader.open("address-delivery-container-sg.json")
-                    .bufferedReader()
-                    .use {
-                        it.readText()
-                    },
-                ViewComponentDTO::class.java
+                    loader.open("address-delivery-container-sg.json")
+                            .bufferedReader()
+                            .use {
+                                it.readText()
+                            },
+                    ViewComponentDTO::class.java
             )
             viewComponents.postValue(ViewComponentsOf(data))
         }
     }
 
     fun submit() {
-        submitSuccess.value = null
+        val payload = hashMapOf<String, String>()
+
+        ArchTaskExecutor.getIOThreadExecutor().execute {
+            viewComponents.value?.forEach {
+                if (it is SubmittableComponent<*>) {
+                    payload[it.param] = it.name
+                }
+            }
+
+            requestPayload.postValue(payload)
+        }
     }
 
 }

@@ -37,8 +37,8 @@ class MainActivity : AppCompatActivity() {
             btnMakeOrder.isEnabled = it
         })
 
-        viewModel.submitSuccess.observe(this, Observer {
-            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+        viewModel.requestPayload.observe(this, Observer { payload ->
+            Toast.makeText(this, payload.toString(), Toast.LENGTH_SHORT).show()
         })
 
         btnMakeOrder.setOnClickListener {
