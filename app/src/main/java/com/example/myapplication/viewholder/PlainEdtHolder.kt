@@ -14,6 +14,7 @@ class PlainEdtHolder(parent: ViewGroup) :
                 R.layout.item_view_check_error_edt) {
 
     init {
+        item?.notifyChange()
         viewBinding.edtMain.addTextChangedListener(onTextChanged = { text, _, _, _ ->
             item?.value = text.toString()
             item?.notifyChange()
