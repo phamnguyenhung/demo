@@ -21,6 +21,13 @@ interface ResourceLoader {
 
 class MainViewModel(loader: ResourceLoader) : ViewModel() {
 
+    companion object {
+        val AVAILABLE_PAYLOAD = hashMapOf(
+                "unit_no" to "123",
+                "level_no" to "abc"
+        )
+    }
+
     val requestPayload = MutableLiveData<Map<String, String>>()
     private val gson = Gson()
 
@@ -46,8 +53,20 @@ class MainViewModel(loader: ResourceLoader) : ViewModel() {
                             },
                     ViewComponentDTO::class.java
             )
-            viewComponents.postValue(ViewComponentsOf(data))
+            viewComponents.postValue(ViewComponentsOf(data).fillAvailableData(AVAILABLE_PAYLOAD))
         }
+    }
+
+    private fun List<ViewComponent>.fillAvailableData(availablePayload: Map<String, String>): List<ViewComponent> {
+        forEach {
+            if (it is SubmittableComponent<*>) {
+                val value = availablePayload[it.param]
+                if (value?.isNotEmpty() == true) {
+                    it.value = value
+                }
+            }
+        }
+        return this
     }
 
     fun submit() {

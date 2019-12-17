@@ -42,7 +42,6 @@ abstract class Observable<T> : IObservable<T> {
     fun asAnyObservable(): Observable<Any> {
         return this as Observable<Any>
     }
-
 }
 
 abstract class SelfObservable<T> : Observable<T>(), ObservableOwner {

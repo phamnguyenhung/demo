@@ -28,6 +28,8 @@ abstract class FormViewHolder<T, V : ViewDataBinding>(
     protected var item: T? = null
         private set
 
+    private var forceValidate: Boolean = true
+
     constructor(parent: ViewGroup, @LayoutRes layoutId: Int) : this(
             DataBindingUtil.inflate(
                     LayoutInflater.from(parent.context),
@@ -47,10 +49,13 @@ abstract class FormViewHolder<T, V : ViewDataBinding>(
     protected open fun onBind(component: T) {}
 
     override fun onChanged(item: T) {
-        if (shouldValidate() && item is ValidateAble) {
-            when (val result = item.validate()) {
-                is ValidationSuccess -> onValid()
-                else -> onError(result)
+        if (shouldValidate() || forceValidate) {
+            forceValidate = false
+            if (item is ValidateAble) {
+                when (val result = item.validate()) {
+                    is ValidationSuccess -> onValid()
+                    else -> onError(result)
+                }
             }
         }
     }

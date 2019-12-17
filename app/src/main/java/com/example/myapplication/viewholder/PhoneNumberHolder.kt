@@ -19,6 +19,7 @@ open class PhoneNumberHolder(
 ) {
 
     init {
+        item?.notifyChange()
         viewBinding.edtMain.addTextChangedListener(
                 onTextChanged = { text, _, _, _ ->
                     item?.value = text.toString()
@@ -48,7 +49,7 @@ open class PhoneNumberHolder(
     }
 
     override fun shouldValidate(): Boolean {
-        return viewBinding.edtMain.isFocused
+        return /*viewBinding.edtMain.isFocused*/ true
     }
 
     override fun onBind(component: PhoneComponent) {
