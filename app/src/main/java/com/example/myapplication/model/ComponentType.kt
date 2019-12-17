@@ -4,6 +4,7 @@ import com.example.myapplication.observable.SelfObservable
 import com.example.myapplication.observable.ValidateAble
 import com.example.myapplication.observable.Validation
 import com.example.myapplication.validator.PhoneValidation
+import com.example.myapplication.validator.PlainEdtValidation
 
 val SESSION_NAME_IDS = listOf(200, 201)
 val PHONE_NUMBER_EDT_IDS = listOf(199)
@@ -43,7 +44,7 @@ interface ViewComponent {
 
 abstract class SubmittableComponent<T>(
         var param: String = "",
-        var name: String = ""
+        var value: String = ""
 ) : SelfObservable<T>(),
         ViewComponent {
     override var id: Int = super.id
@@ -57,7 +58,9 @@ class PhoneComponent(
         private val validation: Validation<String> = PhoneValidation()
 ) : SubmittableComponent<PhoneComponent>(), ValidateAble by validation {
     init {
-        validation.by { name }
+        validation.by {
+            value
+        }
     }
 }
 
@@ -66,11 +69,14 @@ class NoteComponent(
 ) : SubmittableComponent<NoteComponent>()
 
 class PlainEdtComponent(
+        val title: String,
         val hint: String,
-        private val validation: Validation<String> = PhoneValidation()
+        private val validation: Validation<String> = PlainEdtValidation()
 ) : SubmittableComponent<PlainEdtComponent>(), ValidateAble by validation {
     init {
-        validation.by { name }
+        validation.by {
+            value
+        }
     }
 }
 

@@ -26,6 +26,13 @@ class PhoneValidation : Validation<String>() {
     }
 }
 
+class PlainEdtValidation : Validation<String>() {
+    override fun validate(value: String): ValidationResult {
+        if (value.isEmpty()) return ValidationErrorCode(CONTENT_EMPTY)
+        return super.validate(value)
+    }
+}
+
 class RuleContentNotEmpty : Rule<String> {
 
     override fun validate(item: String): ValidationResult {

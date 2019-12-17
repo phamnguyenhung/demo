@@ -37,5 +37,5 @@ data class Item(
     @SerializedName("read_only")
     val readOnly: Boolean? = null,
 
-    val title: String
+    val title: String? = null
 )

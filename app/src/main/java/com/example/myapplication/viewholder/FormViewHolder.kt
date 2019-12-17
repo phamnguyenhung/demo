@@ -65,9 +65,6 @@ abstract class FormViewHolder<T, V : ViewDataBinding>(
 
     }
 
-    fun ValidationErrorCode.getErrorMsg() = validateErrorCode[this.code] ?: -1
-
-
     @Suppress("unchecked_cast")
     open fun onRecycled() {
         (item as? IObservable<T>)?.unsubscribe(this)

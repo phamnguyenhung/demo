@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.example.myapplication.viewholder.FormAdapter
+import com.example.myapplication.viewholder.FormItemDecoration
 import com.example.myapplication.viewmodel.MainViewModel
 import com.example.myapplication.viewmodel.ResourceLoader
 import kotlinx.android.synthetic.main.activity_main.*
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        rvForm.addItemDecoration(FormItemDecoration(this))
         formAdapter = FormAdapter(rvForm)
 
         viewModel.viewComponents.observe(this, Observer {

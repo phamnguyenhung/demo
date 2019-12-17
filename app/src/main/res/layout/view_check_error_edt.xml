@@ -9,10 +9,10 @@
         tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
         <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/etInput"
+            android:id="@+id/edtInput"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/transparent"
+            android:background="@drawable/bg_white_border_gray_5dp"
             android:gravity="center_vertical"
             android:maxLines="1"
             android:padding="10dp"
@@ -29,9 +29,9 @@
             android:padding="10dp"
             android:scaleType="centerCrop"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/etInput"
+            app:layout_constraintBottom_toBottomOf="@id/edtInput"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/etInput"
+            app:layout_constraintTop_toTopOf="@id/edtInput"
             app:srcCompat="@drawable/ic_cancel_gray"
             tools:visibility="visible" />
     </merge>

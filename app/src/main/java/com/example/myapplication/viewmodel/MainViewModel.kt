@@ -56,7 +56,7 @@ class MainViewModel(loader: ResourceLoader) : ViewModel() {
         ArchTaskExecutor.getIOThreadExecutor().execute {
             viewComponents.value?.forEach {
                 if (it is SubmittableComponent<*>) {
-                    payload[it.param] = it.name
+                    payload[it.param] = it.value
                 }
             }
 

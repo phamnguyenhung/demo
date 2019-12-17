@@ -1,34 +1,35 @@
 package com.example.myapplication.dto
 
 import com.example.myapplication.model.*
-import com.example.myapplication.validator.EmailValidation
 
 object ViewComponentsOf {
 
     operator fun invoke(viewComponentDto: ViewComponentDTO): List<ViewComponent> {
         val result = mutableListOf<ViewComponent>()
         viewComponentDto.containers?.firstOrNull()?.let {
+
+            result += SessionNameComponent(
+                    name = "Where should we delivery it?"
+            )
+
             it.groups?.forEach { group ->
                 result.onTraversal(group)
             }
+
+            /*// additional component (just for testing)
+            result += PlainEdtComponent(
+                    title = "Email",
+                    hint = "Email",
+                    validation = EmailValidation()
+            ).apply {
+                param = "email"
+            }*/
 
             if (it.hasNote) {
                 result += NoteComponent().apply {
                     param = "note"
                 }
             }
-
-            // additional component
-            result += PlainEdtComponent(
-                    hint = "Email",
-                    validation = EmailValidation()
-            ).apply {
-                param = "email"
-            }
-
-            result += SessionNameComponent(
-                    name = "Title Name"
-            )
         }
         return result
     }
@@ -44,13 +45,14 @@ object ViewComponentsOf {
                 ComponentType.SESSION_NAME -> {
                 }
                 ComponentType.PHONE_NUMBER_EDT -> this += toPhoneComponent(item)
-                ComponentType.PLAIN_EDT -> this += toPlain(item)
+                ComponentType.PLAIN_EDT -> this += toPlainComponent(item)
                 ComponentType.NOTE_EDT -> this += NoteComponent()
                 else -> {
                 }
             }
 
-    private fun toPlain(item: Item) = PlainEdtComponent(
+    private fun toPlainComponent(item: Item) = PlainEdtComponent(
+            title = item.title ?: "",
             hint = item.name
     ).apply {
         isRequired = item.isRequired
@@ -61,7 +63,7 @@ object ViewComponentsOf {
 
     private fun toPhoneComponent(item: Item) = PhoneComponent(
             hint = item.name,
-            title = item.title
+            title = item.title ?: ""
     ).apply {
         isRequired = item.isRequired
         param = item.param

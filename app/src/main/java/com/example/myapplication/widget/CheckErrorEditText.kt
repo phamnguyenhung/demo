@@ -25,17 +25,30 @@ class CheckErrorEditText @JvmOverloads constructor(
     )
 
     init {
-        context.withStyledAttributes(attrs, R.styleable.CHeckErrorEdittext) {
-            viewBinding.etInput.hint = getString(R.styleable.CHeckErrorEdittext_hint)
+        context.withStyledAttributes(attrs, R.styleable.CheckErrorEditText) {
+            viewBinding.edtInput.hint = getString(R.styleable.CheckErrorEditText_hint)
         }
     }
 
+    override fun isFocused(): Boolean {
+        return viewBinding.edtInput.isFocused
+    }
+
     fun setText(charSequence: CharSequence) {
-        viewBinding.etInput.setText(charSequence)
+        viewBinding.edtInput.setText(charSequence)
     }
 
     fun setHint(charSequence: CharSequence) {
-        viewBinding.etInput.hint = charSequence
+        viewBinding.edtInput.hint = charSequence
+    }
+
+    fun setBackgroundState(isValid: Boolean) {
+        val resId = if (isValid) {
+            R.drawable.bg_white_border_gray_5dp
+        } else {
+            R.drawable.bg_white_border_red_5dp
+        }
+        viewBinding.edtInput.setBackgroundResource(resId)
     }
 }
 
@@ -54,7 +67,7 @@ inline fun CheckErrorEditText.addTextChangedListener(
         ) -> Unit = { _, _, _, _ -> },
         crossinline afterTextChanged: (text: Editable?) -> Unit = {}
 ) {
-    viewBinding.etInput.addTextChangedListener(
+    viewBinding.edtInput.addTextChangedListener(
             beforeTextChanged = beforeTextChanged,
             onTextChanged = onTextChanged,
             afterTextChanged = afterTextChanged
