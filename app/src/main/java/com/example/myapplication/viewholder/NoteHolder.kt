@@ -24,7 +24,7 @@ class NoteHolder(parent: ViewGroup) :
     override fun onBind(component: NoteComponent) {
         viewBinding.apply {
             edtMain.setText(component.value)
-            edtMain.setHint(component.hint)
+            edtMain.hint = component.hint
         }
     }
 }

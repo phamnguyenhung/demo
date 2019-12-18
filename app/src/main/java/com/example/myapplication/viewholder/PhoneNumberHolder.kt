@@ -49,7 +49,7 @@ open class PhoneNumberHolder(
     }
 
     override fun shouldValidate(): Boolean {
-        return /*viewBinding.edtMain.isFocused*/ true
+        return viewBinding.edtMain.isFocused
     }
 
     override fun onBind(component: PhoneComponent) {
